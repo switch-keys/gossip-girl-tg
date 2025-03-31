@@ -6,6 +6,9 @@ from bot.callbacks import review as review_callback, nickname as nickname_callba
 from bot.services import blaster
 import asyncio
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def main():
     bot = Bot(token=os.getenv("BOT_TOKEN"), parse_mode=ParseMode.HTML)
