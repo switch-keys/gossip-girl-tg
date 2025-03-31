@@ -1,8 +1,9 @@
 import os
-from db.model import Character, Submission, Pronouns, Role, Status
+from db.model import Character, Submission, Role, Status
 from db.crud import get_db
-from gpt import gg_voice
+from api.gpt import gg_voice
 from typing import List
+from bot.utils.nickname_cache import nickname_map
 
 #Register
 async def register(telegram_id: int, username: str, display_name: str, nickname: str) -> Character:
@@ -22,7 +23,7 @@ async def register(telegram_id: int, username: str, display_name: str, nickname:
 #Submit Gossip
 async def submit(telegram_id: int, message: str) -> bool:
     db = await get_db()
-    gg_voice_original = await gg_voice(message=message)
+    gg_voice_original = await gg_voice(message=message, name_map=nickname_map)
     submission = Submission(submitter_id=telegram_id, message=message, gg_voice_original=gg_voice_original,
                             gg_voice_final=gg_voice_original, gg_voice_previous= gg_voice_original,
                             is_altered=False, status= Status.PENDING)

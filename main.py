@@ -1,9 +1,11 @@
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.client.default import DefaultBotProperties
 from bot.handlers import start, gossip, review, nickname, assign_gg
 from bot.callbacks import review as review_callback, nickname as nickname_callback, assign_gg as assign_gg_callback
 from bot.services import blaster
+from db.database import init_db
 import asyncio
 import os
 from dotenv import load_dotenv
@@ -11,7 +13,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 async def main():
-    bot = Bot(token=os.getenv("BOT_TOKEN"), parse_mode=ParseMode.HTML)
+    await init_db()
+    bot = Bot(
+        token=os.getenv("BOT_TOKEN"),
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_routers(
         start.router,

@@ -1,5 +1,6 @@
 from aiogram import types, Router
 from aiogram.fsm.context import FSMContext
+from aiogram.filters import Command
 from bot.states.registration import Registration
 from db.crud import get_db
 from bot.utils import nickname_cache
@@ -8,7 +9,7 @@ from api import public
 
 router = Router()
 
-@router.message(commands=["start"])
+@router.message(Command("start"))
 async def start_handler(message: types.Message, state: FSMContext):
     db = await get_db()
     user = await db.Characters.GetByTelegramId(message.from_user.id)

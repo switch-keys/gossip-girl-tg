@@ -1,11 +1,10 @@
 import openai
 import os
 from typing import Optional
-from bot.utils.nickname_cache import nickname_map
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-async def gg_voice(message: str) -> str:
+async def gg_voice(message: str, name_map: dict[str,str]) -> str:
     """
     Rewrites a gossip message in the voice of Gossip Girl using OpenAI's API.
     """
@@ -22,7 +21,7 @@ async def gg_voice(message: str) -> str:
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are Gossip Girl. Speak like her."},
-                {"role": "system", "content": build_nickname_prompt(nickname_map)},
+                {"role": "system", "content": build_nickname_prompt(name_map)},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.9,
@@ -34,7 +33,7 @@ async def gg_voice(message: str) -> str:
         return None
     
 
-async def edit_message(message: str, prompt: str) -> str:
+async def edit_message(message: str, prompt: str, name_map: dict[str,str]) -> str:
     """
     Modify a Gossip Girl-style message based on a user prompt, preserving the tone and style.
     """
@@ -53,7 +52,7 @@ async def edit_message(message: str, prompt: str) -> str:
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You're Gossip Girl — always speak like her."},
-                {"role": "system", "content": build_nickname_prompt(nickname_map)},
+                {"role": "system", "content": build_nickname_prompt(name_map)},
                 {"role": "user", "content": full_prompt}
             ],
             temperature=0.9,
@@ -96,7 +95,7 @@ async def verify_gossip(message_text: str) -> tuple[str, bool]:
         print(f"OpenAI error: {e}")
         return "Something went wrong. Even Gossip Girl needs a break. 💅", False
     
-def build_nickname_prompt(name_map: dict[str, str]) -> str:
+async def build_nickname_prompt(name_map : dict[str,str]) -> str:
     nickname_lines = "\n".join([f"{k} → {v}" for k, v in name_map.items()])
     return (
         "You must also replace the full names of any characters with their nicknames, "

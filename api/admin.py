@@ -2,7 +2,6 @@ from sqlalchemy.future import select
 from db.model import Character, Submission, Status, Role
 from typing import List
 from db.crud import get_db
-from gpt import edit_message
 from datetime import datetime, timezone
 
 async def assign_gg(telegram_id: int) -> tuple[Character, Character]:

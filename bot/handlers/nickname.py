@@ -19,9 +19,7 @@ async def nickname_start(message: types.Message, state: FSMContext):
 
     await message.answer("Whose nickname are we rewriting? 💅", reply_markup=keyboard)
 
-from api import gossip_girl
-
-@router.message(Nickname.waiting_for_nickname_input)
+@router.message(Nickname.waiting_for_input)
 async def handle_new_nickname(message: types.Message, state: FSMContext):
     nickname = message.text.strip()
     data = await state.get_data()
