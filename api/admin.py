@@ -5,7 +5,7 @@ from db.crud import get_db
 from gpt import edit_message
 from datetime import datetime, timezone
 
-async def assign_gg(telegram_id: int) -> bool:
+async def assign_gg(telegram_id: int) -> tuple[Character, Character]:
     db = await get_db()
 
     old_gg = await db.Characters.GetGossipGirl()
@@ -17,4 +17,4 @@ async def assign_gg(telegram_id: int) -> bool:
     await db.Characters.Update(old_gg)
     await db.Characters.Update(new_gg)
 
-    return True
+    return old_gg, new_gg

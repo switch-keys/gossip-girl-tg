@@ -5,10 +5,9 @@ from gpt import gg_voice
 from typing import List
 
 #Register
-async def register(telegram_id: int, username: str, display_name: str, nickname: str) -> bool:
+async def register(telegram_id: int, username: str, display_name: str, nickname: str) -> Character:
     db = await get_db()
     character = await db.Characters.GetByTelegramId(telegram_id)
-    result = False
     if not character:
         role = Role.PUBLIC
         if telegram_id in os.getenv("ADMINS").split(","):
@@ -16,9 +15,9 @@ async def register(telegram_id: int, username: str, display_name: str, nickname:
         new_character = Character(telegram_id=telegram_id, username=username, nickname=nickname,
                                   display_name=display_name, role=role)
         
-        result = await db.Characters.Create(character=new_character)
+        await db.Characters.Create(character=new_character)
 
-    return result
+    return new_character
 
 #Submit Gossip
 async def submit(telegram_id: int, message: str) -> bool:

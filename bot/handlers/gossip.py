@@ -26,5 +26,9 @@ async def handle_message(message: types.Message, state: FSMContext):
 
     if is_gossip:
         await submit(telegram_id, response_text)
+        try:
+            await message.delete()
+        except Exception as e:
+            print(f"Failed to delete gossip message: {e}")
 
     await message.answer(response_text)

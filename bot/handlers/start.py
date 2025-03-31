@@ -2,6 +2,8 @@ from aiogram import types, Router
 from aiogram.fsm.context import FSMContext
 from bot.states.registration import Registration
 from db.crud import get_db
+from bot.utils import nickname_cache
+from bot.utils.commands import set_role_commands
 from api import public
 
 router = Router()
@@ -32,9 +34,11 @@ async def handle_nickname(message: types.Message, state: FSMContext):
     display_name = data.get("display_name")
     nickname = message.text
 
-    result = await public.register(message.from_user.id, message.from_user.username, display_name,
+    character = await public.register(message.from_user.id, message.from_user.username, display_name,
                           nickname)
-    if result:
+    await nickname_cache.get_nickname_map(force_reload=True)
+    if character:
+        await set_role_commands(message.bot, character.telegram_id, role=character.role)
         await message.answer(f"You’re now part of the inner circle, {nickname}. XOXO, Gossip Girl 💋")
     else:
         await message.answer(f"Sorry, {nickname} is already taken. Pick something else — you’re too original to copy. 😉")

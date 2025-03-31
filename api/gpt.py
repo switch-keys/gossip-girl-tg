@@ -1,6 +1,7 @@
 import openai
 import os
 from typing import Optional
+from bot.utils.nickname_cache import nickname_map
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -21,6 +22,7 @@ async def gg_voice(message: str) -> str:
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are Gossip Girl. Speak like her."},
+                {"role": "system", "content": build_nickname_prompt(nickname_map)},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.9,
@@ -51,6 +53,7 @@ async def edit_message(message: str, prompt: str) -> str:
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You're Gossip Girl — always speak like her."},
+                {"role": "system", "content": build_nickname_prompt(nickname_map)},
                 {"role": "user", "content": full_prompt}
             ],
             temperature=0.9,
@@ -92,3 +95,13 @@ async def verify_gossip(message_text: str) -> tuple[str, bool]:
     except Exception as e:
         print(f"OpenAI error: {e}")
         return "Something went wrong. Even Gossip Girl needs a break. 💅", False
+    
+def build_nickname_prompt(name_map: dict[str, str]) -> str:
+    nickname_lines = "\n".join([f"{k} → {v}" for k, v in name_map.items()])
+    return (
+        "You must also replace the full names of any characters with their nicknames, "
+        "using the list below:\n\n"
+        f"{nickname_lines}\n\n"
+        "Always use only nicknames in your response. Do not refer to characters by full names, even if they’re not in the list. "
+        "If no nicknames match, leave the name as-is. Keep it short and scandalous. 💋"
+    )

@@ -70,6 +70,10 @@ class Submissions:
         result = await self.session.execute(select(Submission).where(Submission.status == Status.PENDING))
         return result.scalars().all()
     
+    async def ListScheduled(self) -> List[Submission]:
+        result = await self.session.execute(select(Submission).where(Submission.status == Status.SCHEDULED))
+        return result.scalars().all()
+
     async def ListBySubmitterId(self, submitter_id: int) -> List[Submission]:
         result = await self.session.execute(select(Submission).where(Submission.submitter_id == submitter_id))
         return result.scalars().all()

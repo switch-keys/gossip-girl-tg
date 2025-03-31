@@ -5,10 +5,24 @@ from db.crud import get_db
 from gpt import edit_message
 from datetime import datetime, timezone
 
+async def list_characters() -> List[Character]:
+    db = await get_db()
+    result = await db.Characters.ListAll()
+    return result
 
 async def list_pending() -> List[Submission]:
     db = await get_db()
     result = await db.Submissions.ListPending()
+    return result
+
+async def list_scheduled() -> List[Submission]:
+    db = await get_db()
+    result = await db.Submissions.ListScheduled()
+    return result
+
+async def get_submission(submission_id: int) -> Submission:
+    db = await get_db()
+    result = await db.Submissions.GetById(submission_id)
     return result
 
 async def skip(submission_id: int, reviewer_id: int) -> bool:
@@ -27,7 +41,7 @@ async def schedule(submission_id: int, reviewer_id: int, at_time: datetime) -> b
 
     submission.status = Status.SCHEDULED
     submission.reviewer_id = reviewer_id
-    submission.posted_at = at_time
+    submission.scheduled_at = at_time
 
     result = await db.Submissions.Update(submission)
     return result

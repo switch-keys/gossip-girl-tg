@@ -1,7 +1,7 @@
 import enum
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy import Column, Enum, Integer, BigInteger, String, Boolean, ForeignKey, Text, TIMESTAMP, func
+from sqlalchemy import Column, Enum, Integer, BigInteger, String, Boolean, ForeignKey, Text, DateTime, func, text
 
 Base = declarative_base()
 
@@ -39,5 +39,6 @@ class Submission(Base):
     gg_voice_previous = Column(Text, nullable=False)
     is_altered = Column(Boolean, nullable=False)
     status = Column(Enum(Status))
-    submitted_at = Column(TIMESTAMP, server_default=func.now())
-    posted_at = Column(TIMESTAMP)
+    submitted_at = Column(DateTime(timezone=True), server_default=text("(datetime('now'))"))
+    scheduled_at = Column(DateTime(timezone=True))
+    posted_at = Column(DateTime(timezone=True))
