@@ -1,19 +1,16 @@
-from sqlalchemy.future import select
-from db.model import Character, Submission, Status, Role
-from typing import List
+from db.model import Character, Role
 from db.crud import get_db
-from datetime import datetime, timezone
 
 async def assign_gg(telegram_id: int) -> tuple[Character, Character]:
-    db = await get_db()
+    async with get_db() as db:
 
-    old_gg = await db.Characters.GetGossipGirl()
-    new_gg = await db.Characters.GetByTelegramId(telegram_id=telegram_id)
-    
-    old_gg.role = Role.PUBLIC
-    new_gg.role = Role.GOSSIP_GIRL
+        old_gg = await db.Characters.GetGossipGirl()
+        new_gg = await db.Characters.GetByTelegramId(telegram_id=telegram_id)
+        
+        old_gg.role = Role.PUBLIC
+        new_gg.role = Role.GOSSIP_GIRL
 
-    await db.Characters.Update(old_gg)
-    await db.Characters.Update(new_gg)
+        await db.Characters.Update(old_gg)
+        await db.Characters.Update(new_gg)
 
-    return old_gg, new_gg
+        return old_gg, new_gg

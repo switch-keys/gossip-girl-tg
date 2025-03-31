@@ -11,17 +11,17 @@ router = Router()
 
 @router.message(Command("start"))
 async def start_handler(message: types.Message, state: FSMContext):
-    db = await get_db()
-    user = await db.Characters.GetByTelegramId(message.from_user.id)
+    async with get_db() as db:
+        character = await db.Characters.GetByTelegramId(message.from_user.id)
 
-    if user:
-        # Already registered — silently skip or send a friendly message
-        await message.answer(f"Looks like you’re already in the game, {user.nickname}. Don’t worry, your secrets are safe... for now. 💋")
-        await state.clear()
-        return
+        if character:
+            # Already registered — silently skip or send a friendly message
+            await message.answer(f"Looks like you’re already in the game, {character.nickname}. Don’t worry, your secrets are safe... for now. 💋")
+            await state.clear()
+            return
 
-    await state.set_state(Registration.waiting_for_display_name)
-    await message.answer("Welcome to the Gossip Girl game! 💋\n\nPlease enter your full name.")
+        await state.set_state(Registration.waiting_for_display_name)
+        await message.answer("Welcome to the Gossip Girl game! 💋\n\nPlease enter your full name.")
 
 @router.message(Registration.waiting_for_display_name)
 async def handle_display_name(message: types.Message, state: FSMContext):

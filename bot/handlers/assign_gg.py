@@ -1,7 +1,6 @@
 from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from db.crud import get_db
 from bot.utils import keyboards
 from api import gossip_girl
 from bot.states.assign_gg import AssignGG

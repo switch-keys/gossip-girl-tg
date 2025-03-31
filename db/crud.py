@@ -2,18 +2,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from db.database import AsyncSessionLocal
 from db.model import Character, Submission, Status, Role
-from typing import List
+from typing import List, AsyncIterator
+from contextlib import asynccontextmanager
 
 class DB:
     def __init__(self, session):
         self.Characters = Characters(session)
         self.Submissions = Submissions(session)
-async def get_db() -> DB:
+
+@asynccontextmanager
+async def get_db() -> AsyncIterator[DB]:
     async with AsyncSessionLocal() as session:
-        db = DB(session)
-    return db
-
-
+        yield DB(session)
+        
 #Characters
 class Characters:
     def __init__(self, session : AsyncSession):

@@ -1,8 +1,8 @@
-import openai
+from openai import AsyncOpenAI
 import os
 from typing import Optional
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def gg_voice(message: str, name_map: dict[str,str]) -> str:
     """
@@ -17,8 +17,8 @@ async def gg_voice(message: str, name_map: dict[str,str]) -> str:
     )
 
     try:
-        response = await openai.ChatCompletion.acreate(
-            model="gpt-4",
+        response = await client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are Gossip Girl. Speak like her."},
                 {"role": "system", "content": build_nickname_prompt(name_map)},
@@ -27,7 +27,7 @@ async def gg_voice(message: str, name_map: dict[str,str]) -> str:
             temperature=0.9,
             max_tokens=150,
         )
-        return response.choices[0].message["content"].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"OpenAI API error: {e}")
         return None
@@ -48,8 +48,8 @@ async def edit_message(message: str, prompt: str, name_map: dict[str,str]) -> st
     )
 
     try:
-        response = await openai.ChatCompletion.acreate(
-            model="gpt-4",
+        response = await client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You're Gossip Girl — always speak like her."},
                 {"role": "system", "content": build_nickname_prompt(name_map)},
@@ -58,15 +58,15 @@ async def edit_message(message: str, prompt: str, name_map: dict[str,str]) -> st
             temperature=0.9,
             max_tokens=150,
         )
-        return response.choices[0].message["content"].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"OpenAI API error: {e}")
         return None
 
 async def verify_gossip(message_text: str) -> tuple[str, bool]:
     try:
-        response = await openai.ChatCompletion.acreate(
-            model="gpt-3.5-turbo",
+        response = await client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {
                     "role": "system",
@@ -83,7 +83,7 @@ async def verify_gossip(message_text: str) -> tuple[str, bool]:
             max_tokens=100
         )
 
-        content = response.choices[0].message["content"].strip()
+        content = response.choices[0].message.content.strip()
 
         if content.startswith("#gossip"):
             return content.replace("#gossip", "").strip(), True

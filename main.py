@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -8,9 +11,6 @@ from bot.services import blaster
 from db.database import init_db
 import asyncio
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 async def main():
     await init_db()
