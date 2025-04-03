@@ -3,7 +3,7 @@ from db.model import Character, Submission, Status
 from typing import List
 from db.crud import get_db
 from api.gpt import edit_message as edit_gg_voice
-from bot.utils.nickname_cache import nickname_map
+from bot.utils.nickname_cache import get_nickname_map
 from datetime import datetime, timezone
 
 async def list_characters() -> List[Character]:
@@ -55,6 +55,7 @@ async def blast(submission_id: int) -> bool:
 
 async def edit_message(submission_id: int, prompt: str) -> str:
     async with get_db() as db:
+        nickname_map = await get_nickname_map()
         submission = await db.Submissions.GetById(submission_id)
         updated_message = await edit_gg_voice(submission.gg_voice_final, prompt, nickname_map)
 
@@ -73,7 +74,7 @@ async def undo_edit(submission_id: int) -> str:
         submission.is_altered = (submission.gg_voice_final != submission.gg_voice_original)
 
         await db.Submissions.Update(submission)
-        return submission.gg_voice_final
+        return submission
 
 async def edit_nickname(telegram_id: int, nickname: str) -> bool:
     async with get_db() as db:

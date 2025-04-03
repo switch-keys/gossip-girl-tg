@@ -1,32 +1,39 @@
 import os
-from db.model import Character, Submission, Role, Status
+from db.model import Character, Submission, Role, Status, Pronouns
 from db.crud import get_db
 from api.gpt import gg_voice
 from typing import List
-from bot.utils.nickname_cache import nickname_map
+from bot.utils.nickname_cache import get_nickname_map
 
 #Register
-async def register(telegram_id: int, username: str, display_name: str, nickname: str) -> Character:
+async def register(telegram_id: int, username: str, display_name: str, nickname: str, pronouns: Pronouns) -> Character:
     async with get_db() as db:
         character = await db.Characters.GetByTelegramId(telegram_id)
         if not character:
             role = Role.PUBLIC
-            if telegram_id in os.getenv("ADMINS").split(","):
+            admins = os.getenv("ADMINS").split(",")
+            if str(telegram_id) in admins:
                 role = Role.ADMIN
             new_character = Character(telegram_id=telegram_id, username=username, nickname=nickname,
-                                    display_name=display_name, role=role)
+                                    display_name=display_name, role=role, pronouns=pronouns)
             
             await db.Characters.Create(character=new_character)
 
         return new_character
 
 #Submit Gossip
-async def submit(telegram_id: int, message: str) -> bool:
+async def submit(telegram_id: int, msg: str) -> bool:
     async with get_db() as db:
-        gg_voice_original = await gg_voice(message=message, name_map=nickname_map)
-        submission = Submission(submitter_id=telegram_id, message=message, gg_voice_original=gg_voice_original,
-                                gg_voice_final=gg_voice_original, gg_voice_previous= gg_voice_original,
-                                is_altered=False, status= Status.PENDING)
+        nickname_map = await get_nickname_map()
+        voice = await gg_voice(message=msg, name_map=nickname_map)
+        submission = Submission(
+            submitter_id=telegram_id,
+            message=msg,
+            gg_voice_original=voice,
+            gg_voice_final=voice,
+            gg_voice_previous=voice,
+            is_altered=False,
+            status=Status.PENDING)
         result = await db.Submissions.Create(submission=submission)
         
         return result

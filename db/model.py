@@ -17,6 +17,11 @@ class Status(enum.Enum):
     BLASTED = "Blasted"
     SKIPPED = "Skipped"
 
+class Pronouns(enum.Enum):
+    HE = "he/him"
+    SHE = "she/her"
+    THEY = "they/them"
+
 # Person
 class Character(Base):
     __tablename__ = "characters"
@@ -26,6 +31,7 @@ class Character(Base):
     nickname = Column(String, nullable=False, unique=True)
     display_name = Column(String, nullable=False)
     role = Column(Enum(Role))
+    pronouns = Column(Enum(Pronouns))
 
 class Submission(Base):
     __tablename__ = "submissions"

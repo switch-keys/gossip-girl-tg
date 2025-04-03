@@ -5,18 +5,20 @@ from db.model import Character
 def review(submission_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="Skip 🚫", callback_data=f"review:skip:{submission_id}"),
+            InlineKeyboardButton(text="Reject 🚫", callback_data=f"review:skip:{submission_id}"),
             InlineKeyboardButton(text="Schedule ⏰", callback_data=f"review:schedule:{submission_id}"),
             InlineKeyboardButton(text="Edit Message ✏️", callback_data=f"review:edit:{submission_id}"),
-        ]
+        ],
+        [InlineKeyboardButton(text="❗ Abort", callback_data="common:abort")]
     ])
 
 def edit_message(submission_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="Accept ✅", callback_data=f"review:accept_edit:{submission_id}"),
-            InlineKeyboardButton(text="Undo Edit ↩️", callback_data=f"review:undo_edit:{submission_id}")
-        ]
+            InlineKeyboardButton(text="Accept ✅", callback_data=f"review2:accept_edit:{submission_id}"),
+            InlineKeyboardButton(text="Undo Edit ↩️", callback_data=f"review2:undo_edit:{submission_id}")
+        ],
+        [InlineKeyboardButton(text="❗ Abort", callback_data="common:abort")]
     ])
 
 def edit_nickname(characters: List[Character]) -> InlineKeyboardMarkup:
@@ -29,6 +31,7 @@ def edit_nickname(characters: List[Character]) -> InlineKeyboardMarkup:
                 )
             ] for character in characters
         ]
+        
     )
 
 def assign_gg_select(characters: List[Character]) -> InlineKeyboardMarkup:
@@ -48,5 +51,22 @@ def assign_gg_confirm(telegram_id: int):
         [
             InlineKeyboardButton(text="Yes ✅", callback_data=f"assign_gg:confirm:{telegram_id}"),
             InlineKeyboardButton(text="No ❌", callback_data="assign_gg:cancel")
-        ]
+        ],
+        [InlineKeyboardButton(text="❗ Abort", callback_data="common:abort")]
     ])
+
+def abort_button():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🚫 Abort", callback_data="common:abort")]
+        ]
+    )
+
+def pronouns():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="He/Him", callback_data="pronouns:HE")],
+            [InlineKeyboardButton(text="She/Her", callback_data="pronouns:SHE")],
+            [InlineKeyboardButton(text="They/Them", callback_data="pronouns:THEY")]
+        ]
+    )

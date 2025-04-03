@@ -5,8 +5,8 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.client.default import DefaultBotProperties
-from bot.handlers import start, gossip, review, nickname, assign_gg
-from bot.callbacks import review as review_callback, nickname as nickname_callback, assign_gg as assign_gg_callback
+from bot.handlers import start, gossip, review, nickname, assign_gg, reset, snark
+from bot.callbacks import common, review as review_callback, nickname as nickname_callback, assign_gg as assign_gg_callback
 from bot.services import blaster
 from db.database import init_db
 import asyncio
@@ -21,13 +21,16 @@ async def main():
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_routers(
         start.router,
-        gossip.router,
+        reset.router,
         review.router,
         nickname.router,
         review_callback.router,
         nickname_callback.router,
         assign_gg.router,
-        assign_gg_callback.router
+        assign_gg_callback.router,
+        snark.router,
+        common.router,
+        gossip.router
     )
 
     asyncio.create_task(blaster.loop(bot))
