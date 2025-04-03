@@ -62,6 +62,13 @@ def abort_button():
         ]
     )
 
+def exit():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🚫 Exit", callback_data="common:abort")]
+        ]
+    )
+
 def pronouns():
     return InlineKeyboardMarkup(
         inline_keyboard=[

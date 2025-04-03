@@ -58,10 +58,11 @@ class Submissions:
     def __init__(self, session : AsyncSession):
         self.session = session
 
-    async def Create(self, submission: Submission) -> bool:
+    async def Create(self, submission: Submission) -> Submission:
         self.session.add(submission)
         await self.session.commit()
-        return True
+        await self.session.refresh(submission)
+        return submission
     
     async def GetById(self, id: int) -> Submission:
         result = await self.session.execute(select(Submission).where(Submission.id == id))

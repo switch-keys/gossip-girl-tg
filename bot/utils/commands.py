@@ -9,6 +9,8 @@ async def set_role_commands(bot: Bot, telegram_id: int, role: str):
         base.extend([
             BotCommand(command="nickname", description="Change a user's nickname"),
             BotCommand(command="review", description="Review and manage gossip submissions"),
+            BotCommand(command="bypass", description="Admin gossip injection"),
+            BotCommand(command="schedule", description="Display current blast schedule")
         ])
         
     await bot.set_my_commands(

@@ -22,7 +22,7 @@ async def register(telegram_id: int, username: str, display_name: str, nickname:
         return new_character
 
 #Submit Gossip
-async def submit(telegram_id: int, msg: str) -> bool:
+async def submit(telegram_id: int, msg: str) -> Submission:
     async with get_db() as db:
         nickname_map = await get_nickname_map()
         voice = await gg_voice(message=msg, name_map=nickname_map)
