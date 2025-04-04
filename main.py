@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.client.default import DefaultBotProperties
-from bot.handlers import start, gossip, review, nickname, assign_gg, reset, snark, bypass, schedule
+from bot.handlers import start, gossip, review, nickname, assign_gg, reset, snark, bypass, schedule, group_joins, characters
 from bot.callbacks import common, review as review_callback, nickname as nickname_callback, assign_gg as assign_gg_callback
 from bot.services import blaster
 from db.database import init_db
@@ -28,6 +28,8 @@ async def main():
         nickname_callback.router,
         assign_gg.router,
         assign_gg_callback.router,
+        group_joins.router,
+        characters.router,
         snark.router,
         common.router,
         bypass.router,

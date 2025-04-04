@@ -3,7 +3,8 @@ from aiogram.types import BotCommand, BotCommandScopeChat
 from db.model import Role
 
 async def set_role_commands(bot: Bot, telegram_id: int, role: str):
-    base = [BotCommand(command="start", description="Join the game")]
+    base = [BotCommand(command="start", description="Join the game"),
+            BotCommand(command="characters", description="Display the cast of Gossip Girl")]
 
     if role == Role.ADMIN:
         base.extend([

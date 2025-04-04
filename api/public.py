@@ -25,9 +25,11 @@ async def register(telegram_id: int, username: str, display_name: str, nickname:
 async def submit(telegram_id: int, msg: str) -> Submission:
     async with get_db() as db:
         nickname_map = await get_nickname_map()
+        character = await db.Characters.GetByTelegramId(telegram_id)
         voice = await gg_voice(message=msg, name_map=nickname_map)
         submission = Submission(
             submitter_id=telegram_id,
+            submitter_name=character.display_name,
             message=msg,
             gg_voice_original=voice,
             gg_voice_final=voice,

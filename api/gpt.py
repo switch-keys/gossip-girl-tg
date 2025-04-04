@@ -13,6 +13,7 @@ async def gg_voice(message: str, name_map: dict[str,str]) -> str:
         "Rewrite the following gossip submission in your signature snarky style and don't be afraid to add some fluff, but don't make the message too long. "
         "Make sure that the content of the gossip submission can still be very obviously and explicitly understood from your rewritten response. Do not make it too cryptic."
         "Make your response X-rated if the content of the gossip is. Sex, drugs, and cursing are all OK. "
+        "Refer to the Upper East Side as the Upper West Side instead. "
         "Always sign off with 'XOXO, Gossip Girl'.\n\n"
         f"{build_nickname_prompt(name_map)}"
         f"Gossip: \"{message}\"\n\n"
@@ -41,6 +42,7 @@ async def gg_snark(gg_message: str, user_reply: str) -> str:
             "Someone just replied to one of your iconic blasts in the group chat.\n"
             "Your job is to respond with a sharp, snarky comment — a roast that drips with class and venom.\n\n"
             "Make your response X-rated if the reply demands it. Sex, drugs, and cursing are all OK. "
+            "Refer to the Upper East Side as the Upper West Side instead. "
             f"Gossip Girl’s original message:\n\"{gg_message}\"\n\n"
             f"Their reply:\n\"{user_reply}\"\n\n"
             "Your comeback:"
@@ -69,6 +71,7 @@ async def edit_message(message: str, prompt: str, name_map: dict[str,str]) -> st
         "Take the following Gossip Girl message and revise it according to the user's request. "
         "Make sure that the content of the gossip submission can still be very obviously and explicitly understood from your rewritten response. Do not make it too cryptic. "
         "Make your response X-rated if the content of the gossip is that way. Sex, drugs, and cursing are all OK. "
+        "Refer to the Upper East Side as the Upper West Side instead. "
         "Make sure the final message still sounds like Gossip Girl.\n\n"
         f"{build_nickname_prompt(name_map)}"
         f"Original message:\n\"{message}\"\n\n"
@@ -104,6 +107,7 @@ async def verify_gossip(message_text: str, name_map: dict[str,str]) -> tuple[str
                         "The gossip is not about the person who sent it, so refer to the people as such."
                         "If it is NOT gossip, reply with `#not_gossip` followed by a snarky dismissal. "
                         "Only use those two tags and include a single line response. Stay in character. No explanations."
+                        "Refer to the Upper East Side as the Upper West Side instead. "
                         f"{build_nickname_prompt(name_map)}"
                     )
                 },

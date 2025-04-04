@@ -38,6 +38,7 @@ class Submission(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     submitter_id = Column(Integer, ForeignKey("characters.telegram_id", ondelete="CASCADE"), nullable=False)
+    submitter_name = Column(Text, nullable=False)
     reviewer_id = Column(Integer, ForeignKey("characters.telegram_id", ondelete="SET NULL"), nullable=True)
     message = Column(Text, nullable=False)
     gg_voice_original = Column(Text, nullable=False)
