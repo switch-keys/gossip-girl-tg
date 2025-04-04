@@ -23,7 +23,7 @@ async def start_handler(message: types.Message, state: FSMContext):
             await message.answer(f"Looks like you’re already in the game, {character.nickname}. Don’t worry, your secrets are safe... for now. 💋")
             await state.clear()
             return
-
+        await state.update_data(username=message.from_user.username)
         await state.set_state(Registration.waiting_for_display_name)
         await message.answer("Welcome to the Gossip Girl game! 💋\n\nPlease enter your full name.")
 
@@ -53,10 +53,11 @@ async def handle_pronouns(callback: types.CallbackQuery, state: FSMContext):
     pronouns = Pronouns[value]
     data = await state.get_data()
     display_name = data.get("display_name")
+    username = data.get("username")
     nickname = data.get("nickname")
     telegram_id = data.get("telegram_id")
 
-    character = await public.register(telegram_id, callback.message.from_user.username, display_name,
+    character = await public.register(telegram_id, username, display_name,
                           nickname, pronouns)
     await nickname_cache.get_nickname_map(force_reload=True)
     if character:
