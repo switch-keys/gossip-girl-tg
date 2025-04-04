@@ -27,7 +27,7 @@ class Character(Base):
     __tablename__ = "characters"
 
     telegram_id = Column(BigInteger, primary_key=True, index=True)
-    username = Column(String, nullable=False, unique=True)
+    username = Column(String, nullable=True)
     nickname = Column(String, nullable=False, unique=True)
     display_name = Column(String, nullable=False)
     role = Column(Enum(Role))

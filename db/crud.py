@@ -25,7 +25,8 @@ class Characters:
         try:
             await self.session.commit()
             return True
-        except:
+        except Exception as e:
+            print({e})
             return False
     
     async def GetByTelegramId(self, telegram_id: int) -> Character:

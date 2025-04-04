@@ -56,9 +56,11 @@ async def handle_pronouns(callback: types.CallbackQuery, state: FSMContext):
     username = data.get("username")
     nickname = data.get("nickname")
     telegram_id = data.get("telegram_id")
-
-    character = await public.register(telegram_id, username, display_name,
+    try:
+        character = await public.register(telegram_id, username, display_name,
                           nickname, pronouns)
+    except:
+        await callback.message.answer("Error creating character")
     await nickname_cache.get_nickname_map(force_reload=True)
     if character:
         await set_role_commands(callback.message.bot, character.telegram_id, role=character.role)
