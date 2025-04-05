@@ -2,10 +2,11 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from db.crud import get_db
+from bot.utils.private_only import PrivateOnly
 
 router = Router()
 
-@router.message(Command("characters"))
+@router.message(Command("characters"), PrivateOnly() )
 async def characters_list(message: Message):
     async with get_db() as db:
         users = await db.Characters.ListAll()
